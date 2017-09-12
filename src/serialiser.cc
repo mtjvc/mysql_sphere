@@ -2,10 +2,14 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-#include <mysql/plugin.h>
 #include <mysql_version.h>
 
-#include <base64.h>
+#if defined(MARIADB_BASE_VERSION) && MYSQL_VERSION_ID >= 100100
+    #include "base64.h"
+#else
+    #include <mysql/plugin.h>
+    #include <base64.h>
+#endif
 
 #include "globals.h"
 #include "serialiser.h"
