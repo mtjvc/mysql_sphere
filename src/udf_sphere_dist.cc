@@ -64,12 +64,12 @@ double sdist( UDF_INIT* initid, UDF_ARGS* args, char* is_null, char* error ) {
 	MYSQL_UDF_DYNCHK_SPHERETYPE( 1, memBuf, PROTECT({MYSQL_SPHERE_POINT, MYSQL_SPHERE_CIRCLE}) );
 
     if( !(
-        (membuf->argTypes[0] == MYSQL_SPHERE_POINT && membuf->argTypes[1] == MYSQL_SPHERE_POINT) ||
-        (membuf->argTypes[0] == MYSQL_SPHERE_CIRCLE && membuf->argTypes[1] == MYSQL_SPHERE_CIRCLE) ||
-        (membuf->argTypes[0] == MYSQL_SPHERE_CIRCLE && membuf->argTypes[1] == MYSQL_SPHERE_POINT) ||
-        (membuf->argTypes[0] == MYSQL_SPHERE_POINT && membuf->argTypes[1] == MYSQL_SPHERE_CIRCLE)
+        (memBuf->argTypes[0] == MYSQL_SPHERE_POINT && memBuf->argTypes[1] == MYSQL_SPHERE_POINT) ||
+        (memBuf->argTypes[0] == MYSQL_SPHERE_CIRCLE && memBuf->argTypes[1] == MYSQL_SPHERE_CIRCLE) ||
+        (memBuf->argTypes[0] == MYSQL_SPHERE_CIRCLE && memBuf->argTypes[1] == MYSQL_SPHERE_POINT) ||
+        (memBuf->argTypes[0] == MYSQL_SPHERE_POINT && memBuf->argTypes[1] == MYSQL_SPHERE_CIRCLE)
         ) ) {
-        delete membuf;
+        delete memBuf;
         return 1;
     }
 
