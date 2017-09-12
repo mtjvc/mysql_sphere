@@ -33,17 +33,6 @@ my_bool sdist_init( UDF_INIT* initid, UDF_ARGS* args, char* message ) {
 		MYSQL_UDF_CHK_SPHERETYPE( 1, buf, PROTECT({MYSQL_SPHERE_POINT, MYSQL_SPHERE_CIRCLE}), 
 											"dist() error decoding second parameter. Corrupted or not the correct type." );
 
-    	if( !(
-    		(buf->argTypes[0] == MYSQL_SPHERE_POINT && buf->argTypes[1] == MYSQL_SPHERE_POINT) ||
-    		(buf->argTypes[0] == MYSQL_SPHERE_CIRCLE && buf->argTypes[1] == MYSQL_SPHERE_CIRCLE) ||
-    		(buf->argTypes[0] == MYSQL_SPHERE_CIRCLE && buf->argTypes[1] == MYSQL_SPHERE_POINT) ||
-    		(buf->argTypes[0] == MYSQL_SPHERE_POINT && buf->argTypes[1] == MYSQL_SPHERE_CIRCLE)
-    		) ) {
-			strcpy(message, "dist() error combining MySQL sphere objects. Unsupported combination.");
-			delete buf;
-			return 1;
-    	}
-
     } else {
 		strcpy(message, "wrong number of arguments: dist() requires two parameter");
 		return 1;
@@ -73,6 +62,16 @@ double sdist( UDF_INIT* initid, UDF_ARGS* args, char* is_null, char* error ) {
 	MYSQL_UDF_DYNCHK_SPHERETYPE( 0, memBuf, PROTECT({MYSQL_SPHERE_POINT, MYSQL_SPHERE_CIRCLE}) );
 
 	MYSQL_UDF_DYNCHK_SPHERETYPE( 1, memBuf, PROTECT({MYSQL_SPHERE_POINT, MYSQL_SPHERE_CIRCLE}) );
+
+    if( !(
+        (membuf->argTypes[0] == MYSQL_SPHERE_POINT && membuf->argTypes[1] == MYSQL_SPHERE_POINT) ||
+        (membuf->argTypes[0] == MYSQL_SPHERE_CIRCLE && membuf->argTypes[1] == MYSQL_SPHERE_CIRCLE) ||
+        (membuf->argTypes[0] == MYSQL_SPHERE_CIRCLE && membuf->argTypes[1] == MYSQL_SPHERE_POINT) ||
+        (membuf->argTypes[0] == MYSQL_SPHERE_POINT && membuf->argTypes[1] == MYSQL_SPHERE_CIRCLE)
+        ) ) {
+        delete membuf;
+        return 1;
+    }
 
 	if(memBuf->argTypes[0] == MYSQL_SPHERE_POINT && memBuf->argTypes[1] == MYSQL_SPHERE_POINT) {
 		result = spherepoint_distance((SPoint*) memBuf->memBufs[0], (SPoint*) memBuf->memBufs[1]);
